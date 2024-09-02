@@ -1,0 +1,46 @@
+# JDBC 연동 단계
+
+1. **JDBC 드라이버 다운로드**
+   - JDBC 드라이버는 Oracle 웹사이트에서 다운로드 가능.
+   - [Oracle JDBC 드라이버 다운로드](http://www.oracle.com)
+
+2. **JDBC 드라이버 설치**
+   - 다운로드한 드라이버를 프로젝트에 추가.
+
+3. **프로젝트 생성 및 드라이버 추가**
+   - 이클립스나 IntelliJ와 같은 IDE에서 새로운 Java 프로젝트를 생성.
+   - 다운로드한 JDBC 드라이버 파일(ojdbc6.jar)을 프로젝트 라이브러리에 추가.
+
+4. **JDBC 연동을 위한 코드 작성**
+
+   ```java
+   // Oracle JDBC 드라이버 로딩
+   Class.forName("oracle.jdbc.driver.OracleDriver");
+
+   // 데이터베이스 연결 정보 설정
+   String jdbcDriver = "jdbc:oracle:thin:@localhost:1521:XE"; // XE는 Oracle Express Edition
+   String dbUser = "username"; // 데이터베이스 사용자 이름
+   String dbPwd = "password"; // 데이터베이스 비밀번호
+
+   // 데이터베이스 연결
+   Connection conn = DriverManager.getConnection(jdbcDriver, dbUser, dbPwd);
+
+   // 쿼리 준비
+   String query = "SELECT * FROM 테이블명 WHERE 조건 = ?";
+   PreparedStatement stmt = conn.prepareStatement(query);
+
+   // 파라미터 설정
+   stmt.setString(1, "조건값");
+
+   // 쿼리 실행
+   ResultSet rs = stmt.executeQuery();
+
+   // 결과 처리
+   while (rs.next()) {
+       System.out.println("데이터: " + rs.getString("컬럼명"));
+   }
+
+   // 자원 해제
+   rs.close();
+   stmt.close();
+   conn.close();
